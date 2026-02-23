@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Whack-a-Mole Game</title>
+    <style>
+        /* 這裡放 CSS */
+        body { text-align: center; font-family: sans-serif; }
+        .game { display: flex; width: 600px; flex-wrap: wrap; margin: 0 auto; }
+        .hole { width: 180px; height: 150px; background: #8B4513; margin: 10px; position: relative; overflow: hidden; }
+        .mole { width: 100%; height: 100%; background: orange; position: absolute; top: 100%; transition: 0.3s; cursor: pointer; }
+        .hole.up .mole { top: 0; }
+    </style>
+</head>
+<body>
+    <h1>Score: <span id="score">0</span></h1>
+    <button onclick="startGame()">Start Game!</button>
+    <div class="game">
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+    </div>
+
+    <script>
+        // 這裡放 JS
+        const holes = document.querySelectorAll('.hole');
+        const scoreBoard = document.querySelector('#score');
+        const moles = document.querySelectorAll('.mole');
+        let score = 0;
+        let timeUp = false;
+
+        function startGame() {
+            score = 0;
+            scoreBoard.textContent = 0;
+            timeUp = false;
+            peep();
+            setTimeout(() => timeUp = true, 10000); // 玩 10 秒
+        }
+
+        function peep() {
+            const hole = holes[Math.floor(Math.random() * holes.length)];
+            hole.classList.add('up');
+            setTimeout(() => {
+                hole.classList.remove('up');
+                if (!timeUp) peep();
+            }, 800);
+        }
+
+        moles.forEach(mole => mole.addEventListener('click', () => {
+            score++;
+            scoreBoard.textContent = score;
+            mole.parentElement.classList.remove('up');
+        }));
+    </script>
+</body>
+</html>

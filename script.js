@@ -1,64 +1,49 @@
+const holes = document.querySelectorAll('.hole');
+const scoreBoard = document.querySelector('#score');
+const startBtn = document.querySelector('#start-btn');
+let lastHole;
 let score = 0;
-let gameRunning = false;
-let timeLeft = 30;
-let timerInterval;
+let timeUp = false;
 
-const moles = document.querySelectorAll('.mole');
-const scoreDisplay = document.getElementById('score');
-const startButton = document.getElementById('start-button');
-
-function getRandomMole() {
-    return Math.floor(Math.random() * moles.length);
+// Generate a random time for the mole to stay up
+function randomTime(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
 }
 
-function showMole() {
-    const randomMole = getRandomMole();
-    const mole = moles[randomMole];
-    mole.classList.add('show');
+// Pick a random hole for the mole to pop out of
+function randomHole(holes) {
+    const idx = Math.floor(Math.random() * holes.length);
+    const hole = holes[idx];
+    if (hole === lastHole) return randomHole(holes);
+    lastHole = hole;
+    return hole;
+}
+
+function peep() {
+    const time = randomTime(500, 1000); // Between 0.5 and 1 second
+    const hole = randomHole(holes);
+    hole.classList.add('up');
     setTimeout(() => {
-        mole.classList.remove('show');
-    }, 800);
+        hole.classList.remove('up');
+        if (!timeUp) peep();
+    }, time);
 }
 
 function startGame() {
+    scoreBoard.textContent = 0;
+    timeUp = false;
     score = 0;
-    timeLeft = 30;
-    gameRunning = true;
-    scoreDisplay.textContent = 'Score: 0';
-    startButton.disabled = true;
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-            endGame();
-        }
-    }, 1000);
-
-    // Show moles every 500ms
-    const moleInterval = setInterval(() => {
-        if (gameRunning) {
-            showMole();
-        } else {
-            clearInterval(moleInterval);
-        }
-    }, 500);
+    peep();
+    setTimeout(() => timeUp = true, 15000); // Game lasts 15 seconds
 }
 
-function endGame() {
-    gameRunning = false;
-    clearInterval(timerInterval);
-    startButton.disabled = false;
-    alert('Game Over! Your score: ' + score);
+function whack(e) {
+    if(!e.isTrusted) return; // Prevent cheating with fake clicks
+    score++;
+    this.parentNode.classList.remove('up');
+    scoreBoard.textContent = score;
 }
 
-moles.forEach((mole, index) => {
-    mole.addEventListener('click', () => {
-        if (mole.classList.contains('show') && gameRunning) {
-            score++;
-            scoreDisplay.textContent = 'Score: ' + score;
-            mole.classList.remove('show');
-        }
-    });
-});
-
-startButton.addEventListener('click', startGame);
+const moles = document.querySelectorAll('.mole');
+moles.forEach(mole => mole.addEventListener('click', whack));
+startBtn.addEventListener('click', startGame);

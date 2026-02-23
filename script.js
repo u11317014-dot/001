@@ -1,49 +1,48 @@
 const holes = document.querySelectorAll('.hole');
 const scoreBoard = document.querySelector('#score');
-const startBtn = document.querySelector('#start-btn');
+const moles = document.querySelectorAll('.mole');
 let lastHole;
 let score = 0;
 let timeUp = false;
 
-// Generate a random time for the mole to stay up
-function randomTime(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
-}
-
-// Pick a random hole for the mole to pop out of
+// 1. 隨機取得一個洞
 function randomHole(holes) {
     const idx = Math.floor(Math.random() * holes.length);
     const hole = holes[idx];
-    if (hole === lastHole) return randomHole(holes);
+    if (hole === lastHole) return randomHole(holes); // 避免連續出現在同一個洞
     lastHole = hole;
     return hole;
 }
 
+// 2. 讓地鼠冒出來
 function peep() {
-    const time = randomTime(500, 1000); // Between 0.5 and 1 second
+    const time = Math.random() * 700 + 300; // 隨機出現 0.3~1 秒
     const hole = randomHole(holes);
-    hole.classList.add('up');
+    const mole = hole.querySelector('.mole');
+    
+    mole.classList.add('up');
+
     setTimeout(() => {
-        hole.classList.remove('up');
-        if (!timeUp) peep();
+        mole.classList.remove('up');
+        if (!timeUp) peep(); // 如果遊戲沒結束，繼續下一隻
     }, time);
 }
 
+// 3. 開始遊戲
 function startGame() {
+    score = 0;
     scoreBoard.textContent = 0;
     timeUp = false;
-    score = 0;
     peep();
-    setTimeout(() => timeUp = true, 15000); // Game lasts 15 seconds
+    setTimeout(() => timeUp = true, 10000); // 遊戲時長 10 秒
 }
 
-function whack(e) {
-    if(!e.isTrusted) return; // Prevent cheating with fake clicks
-    score++;
-    this.parentNode.classList.remove('up');
-    scoreBoard.textContent = score;
-}
-
-const moles = document.querySelectorAll('.mole');
-moles.forEach(mole => mole.addEventListener('click', whack));
-startBtn.addEventListener('click', startGame);
+// 4. 點擊（打）地鼠
+moles.forEach(mole => {
+    mole.addEventListener('click', function() {
+        if(!this.classList.contains('up')) return; // 地鼠沒上來點了不算分
+        score++;
+        this.classList.remove('up'); // 打中後地鼠立刻縮回去
+        scoreBoard.textContent = score;
+    });
+});

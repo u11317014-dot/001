@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whack-a-Mole Game</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>簡易打地鼠</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Whack-a-Mole Game</h1>
-    <div id="game">
-        <div class="mole" id="mole1"></div>
-        <div class="mole" id="mole2"></div>
-        <div class="mole" id="mole3"></div>
-        <div class="mole" id="mole4"></div>
-        <div class="mole" id="mole5"></div>
-        <div class="mole" id="mole6"></div>
+    <h1>打地鼠遊戲！ 分數: <span id="score">0</span></h1>
+    <button onclick="startGame()">開始遊戲</button>
+
+    <div class="game-container">
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
+        <div class="hole"><div class="mole"></div></div>
     </div>
-    <button id="start-button">Start Game</button>
-    <div id="score">Score: 0</div>
+
+    <script src="script.js"></script>
 </body>
 </html>

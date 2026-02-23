@@ -1,29 +1,31 @@
-body { font-family: 'Arial', sans-serif; text-align: center; background: #f0f0f0; }
-
-.game {
-    width: 600px; height: 400px;
-    display: flex; flex-wrap: wrap;
+.game-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
     margin: 20px auto;
 }
 
 .hole {
-    flex: 1 0 33.33%;
-    overflow: hidden;
-    position: relative;
+    width: 180px;
     height: 150px;
-    background: #8B4513; /* Dirt color */
-    border: 10px solid #f0f0f0;
+    background: #8b4513; /* 咖啡色洞口 */
+    margin: 10px;
+    position: relative;
+    overflow: hidden; /* 確保地鼠下去後看不見 */
+    border-radius: 50%;
 }
 
 .mole {
-    background: #a52a2a; /* Mole color */
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
+    background: #ffcc00; /* 黃色地鼠 */
     position: absolute;
-    top: 100%; /* Hidden by default */
-    transition: all 0.4s;
+    top: 100%; /* 預設在下方（隱藏） */
+    transition: top 0.3s ease; /* 冒出來的動畫 */
+    border-radius: 50% 50% 0 0;
 }
 
-/* This class will be added by JavaScript */
-.hole.up .mole {
+/* 當地鼠有 .up 這個 class 時，移動到上方 */
+.mole.up {
     top: 0;
 }
